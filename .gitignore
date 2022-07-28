@@ -1,0 +1,17 @@
+# Generated Metadata
+/plot_metadata
+
+# Generated Logs
+/log
+
+node_modules
+coverage
+coverage.json
+types
+typechain
+node_modules
+.env
+
+#Hardhat files
+cache
+artifacts

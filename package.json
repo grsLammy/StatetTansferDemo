@@ -1,0 +1,40 @@
+{
+  "name": "gelato-ui-demo",
+  "version": "1.0.0",
+  "description": "simple smart contract demo for gelato ui",
+  "scripts": {
+    "clean": "npx hardhat clean",
+    "compile": "npx hardhat compile",
+    "deploy:goerli": "npx hardhat --network goerli deploy",
+    "deploy:mumbai": "npx hardhat --network mumbai deploy"
+  },
+  "author": "Gulam Rasul Shah",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
+    "@nomiclabs/hardhat-etherscan": "^2.1.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@typechain/ethers-v5": "^7.1.0",
+    "@typechain/hardhat": "^2.3.0",
+    "ethereum-waffle": "^3.4.0",
+    "@types/node": "^16.9.6",
+    "ethers": "^5.5.4",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.2.1",
+    "hardhat": "^2.6.4",
+    "typechain": "^5.1.2",
+    "typescript": "^4.4.3",
+    "lint-staged": "^11.1.2",
+    "hardhat-deploy": "^0.11.10",
+    "solidity-coverage": "^0.7.17",
+    "hardhat-gas-reporter": "^1.0.4",
+    "prettier-plugin-solidity": "^1.0.0-beta.18"
+},
+"lint-staged": {
+    "*.{ts,json,sol,md,yml}": "prettier --write"
+},
+"dependencies": {
+    "@openzeppelin/contracts": "^4.3.2",
+    "dotenv": "^10.0.0"
+  }
+}
