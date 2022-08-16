@@ -9,5 +9,5 @@
         "noImplicitAny": false,
         "resolveJsonModule": true
     },
-    "include": ["./hardhat.config.ts", "./scripts", "./deploy", "./test", "./src/types", "00_FxStateRootTunnel.ts"]
+    "include": ["./hardhat.config.ts", "./scripts", "./deploy", "./test", "./src/types", "00_FxStateRootTunnel.ts, 01_FxStateChildTunnel.ts"]
 }
