@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { FxBaseChildTunnel } from "./tunnel/FxBaseChildTunnel.sol";
+import { FxBaseChildTunnel } from "@maticnetwork/fx-portal/contracts/tunnel/FxBaseChildTunnel.sol";
 
 /**
  * @title FxStateChildTunnel
