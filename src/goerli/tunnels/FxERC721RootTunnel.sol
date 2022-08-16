@@ -1,32 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { ERC20 } from "../lib/ERC20.sol";
-import { Create2 } from "../lib/Create2.sol";
-import { FxBaseRootTunnel } from "../tunnel/FxBaseRootTunnel.sol";
-import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import { ERC721 } from "../../lib/ERC721.sol";
+import { Create2 } from "../../lib/Create2.sol";
+import { FxBaseRootTunnel } from "./FxBaseRootTunnel.sol";
+import { IERC721Receiver } from "../../lib/IERC721Receiver.sol";
 
 /**
- * @title FxERC20RootTunnel
+ * @title FxERC721RootTunnel
  */
-contract FxERC20RootTunnel is FxBaseRootTunnel, Create2 {
-    using SafeERC20 for IERC20;
+contract FxERC721RootTunnel is FxBaseRootTunnel, Create2, IERC721Receiver {
     // maybe DEPOSIT and MAP_TOKEN can be reduced to bytes4
     bytes32 public constant DEPOSIT = keccak256("DEPOSIT");
     bytes32 public constant MAP_TOKEN = keccak256("MAP_TOKEN");
 
-    event TokenMappedERC20(address indexed rootToken, address indexed childToken);
-    event FxWithdrawERC20(
+    event TokenMappedERC721(address indexed rootToken, address indexed childToken);
+    event FxWithdrawERC721(
         address indexed rootToken,
         address indexed childToken,
         address indexed userAddress,
-        uint256 amount
+        uint256 id
     );
-    event FxDepositERC20(
+    event FxDepositERC721(
         address indexed rootToken,
         address indexed depositor,
         address indexed userAddress,
-        uint256 amount
+        uint256 id
     );
 
     mapping(address => address) public rootToChildTokens;
@@ -35,10 +34,19 @@ contract FxERC20RootTunnel is FxBaseRootTunnel, Create2 {
     constructor(
         address _checkpointManager,
         address _fxRoot,
-        address _fxERC20Token
+        address _fxERC721Token
     ) FxBaseRootTunnel(_checkpointManager, _fxRoot) {
         // compute child token template code hash
-        childTokenTemplateCodeHash = keccak256(minimalProxyCreationCode(_fxERC20Token));
+        childTokenTemplateCodeHash = keccak256(minimalProxyCreationCode(_fxERC721Token));
+    }
+
+    function onERC721Received(
+        address, /* operator */
+        address, /* from */
+        uint256, /* tokenId */
+        bytes calldata /* data */
+    ) external pure override returns (bytes4) {
+        return this.onERC721Received.selector;
     }
 
     /**
@@ -47,16 +55,15 @@ contract FxERC20RootTunnel is FxBaseRootTunnel, Create2 {
      */
     function mapToken(address rootToken) public {
         // check if token is already mapped
-        require(rootToChildTokens[rootToken] == address(0x0), "FxERC20RootTunnel: ALREADY_MAPPED");
+        require(rootToChildTokens[rootToken] == address(0x0), "FxERC721RootTunnel: ALREADY_MAPPED");
 
-        // name, symbol and decimals
-        ERC20 rootTokenContract = ERC20(rootToken);
+        // name, symbol
+        ERC721 rootTokenContract = ERC721(rootToken);
         string memory name = rootTokenContract.name();
         string memory symbol = rootTokenContract.symbol();
-        uint8 decimals = rootTokenContract.decimals();
 
-        // MAP_TOKEN, encode(rootToken, name, symbol, decimals)
-        bytes memory message = abi.encode(MAP_TOKEN, abi.encode(rootToken, name, symbol, decimals));
+        // MAP_TOKEN, encode(rootToken, name, symbol)
+        bytes memory message = abi.encode(MAP_TOKEN, abi.encode(rootToken, name, symbol));
         _sendMessageToChild(message);
 
         // compute child token address before deployment using create2
@@ -65,13 +72,13 @@ contract FxERC20RootTunnel is FxBaseRootTunnel, Create2 {
 
         // add into mapped tokens
         rootToChildTokens[rootToken] = childToken;
-        emit TokenMappedERC20(rootToken, childToken);
+        emit TokenMappedERC721(rootToken, childToken);
     }
 
     function deposit(
         address rootToken,
         address user,
-        uint256 amount,
+        uint256 tokenId,
         bytes memory data
     ) public {
         // map token if not mapped
@@ -80,29 +87,30 @@ contract FxERC20RootTunnel is FxBaseRootTunnel, Create2 {
         }
 
         // transfer from depositor to this contract
-        IERC20(rootToken).safeTransferFrom(
+        ERC721(rootToken).safeTransferFrom(
             msg.sender, // depositor
             address(this), // manager contract
-            amount
+            tokenId,
+            data
         );
 
-        // DEPOSIT, encode(rootToken, depositor, user, amount, extra data)
-        bytes memory message = abi.encode(DEPOSIT, abi.encode(rootToken, msg.sender, user, amount, data));
+        // DEPOSIT, encode(rootToken, depositor, user, tokenId, extra data)
+        bytes memory message = abi.encode(DEPOSIT, abi.encode(rootToken, msg.sender, user, tokenId, data));
         _sendMessageToChild(message);
-        emit FxDepositERC20(rootToken, msg.sender, user, amount);
+        emit FxDepositERC721(rootToken, msg.sender, user, tokenId);
     }
 
     // exit processor
     function _processMessageFromChild(bytes memory data) internal override {
-        (address rootToken, address childToken, address to, uint256 amount) = abi.decode(
+        (address rootToken, address childToken, address to, uint256 tokenId, bytes memory syncData) = abi.decode(
             data,
-            (address, address, address, uint256)
+            (address, address, address, uint256, bytes)
         );
         // validate mapping for root to child
-        require(rootToChildTokens[rootToken] == childToken, "FxERC20RootTunnel: INVALID_MAPPING_ON_EXIT");
+        require(rootToChildTokens[rootToken] == childToken, "FxERC721RootTunnel: INVALID_MAPPING_ON_EXIT");
 
         // transfer from tokens to
-        IERC20(rootToken).safeTransfer(to, amount);
-        emit FxWithdrawERC20(rootToken, childToken, to, amount);
+        ERC721(rootToken).safeTransferFrom(address(this), to, tokenId, syncData);
+        emit FxWithdrawERC721(rootToken, childToken, to, tokenId);
     }
 }

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { IFxERC1155 } from "../tokens/IFxERC1155.sol";
-import { ERC1155Holder } from "../lib/ERC1155Holder.sol";
-import { Create2 } from "../lib/Create2.sol";
-import { FxBaseChildTunnel } from "../tunnel/FxBaseChildTunnel.sol";
+import { IFxERC1155 } from "../../tokens/IFxERC1155.sol";
+import { ERC1155Holder } from "../../lib/ERC1155Holder.sol";
+import { Create2 } from "../../lib/Create2.sol";
+import { FxBaseChildTunnel } from "./FxBaseChildTunnel.sol";
 
 contract FxERC1155ChildTunnel is FxBaseChildTunnel, Create2, ERC1155Holder {
     bytes32 public constant DEPOSIT = keccak256("DEPOSIT");
