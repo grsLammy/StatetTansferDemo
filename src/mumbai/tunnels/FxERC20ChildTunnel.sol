@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import { Create2 } from "../../utils/lib/Create2.sol";
+import { IFxERC20 } from "../../utils/tokens/IFxERC20.sol";
 import { FxBaseChildTunnel } from "./FxBaseChildTunnel.sol";
-import { Create2 } from "../../lib/Create2.sol";
-import { IFxERC20 } from "../../tokens/IFxERC20.sol";
 
 /**
  * @title FxERC20ChildTunnel

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import { Create2 } from "../../utils/lib/Create2.sol";
 import { FxBaseChildTunnel } from "./FxBaseChildTunnel.sol";
-import { Create2 } from "../../lib/Create2.sol";
-import { IFxERC721 } from "../../tokens/IFxERC721.sol";
-import { IERC721Receiver } from "../../lib/IERC721Receiver.sol";
+import { IFxERC721 } from "../../utils/tokens/IFxERC721.sol";
+import { IERC721Receiver } from "../../utils/lib/IERC721Receiver.sol";
 
 /**
  * @title FxERC721ChildTunnel

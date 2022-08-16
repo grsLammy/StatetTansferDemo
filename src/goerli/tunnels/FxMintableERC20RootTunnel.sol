@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { Create2 } from "../../lib/Create2.sol";
-import { SafeMath } from "../../lib/SafeMath.sol";
-import { FxERC20 } from "../../tokens/FxERC20.sol";
+import { Create2 } from "../../utils/lib/Create2.sol";
+import { SafeMath } from "../../utils/lib/SafeMath.sol";
+import { FxERC20 } from "../../utils/tokens/FxERC20.sol";
 import { FxBaseRootTunnel } from "./FxBaseRootTunnel.sol";
 import { SafeERC20, IERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
