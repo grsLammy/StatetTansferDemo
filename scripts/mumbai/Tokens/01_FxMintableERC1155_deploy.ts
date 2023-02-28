@@ -4,23 +4,20 @@ import { DeployFunction } from "hardhat-deploy/dist/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 dotenv.config();
 
-const _fxChild = process.env.FXCHILD;
-const _ERC1155TokenTemplate = process.env.ERC1155TOKEN_TEMPLATE;
-
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     const { deployments } = hre;
     const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
 
-    await deploy("FxERC1155ChildTunnel", {
+    await deploy("FxMintableERC1155", {
         from: deployer,
-        args: [_fxChild, _ERC1155TokenTemplate],
+        args: [],
         log: true,
         skipIfAlreadyDeployed: true,
-        contract: "FxERC1155ChildTunnel",
+        contract: "FxMintableERC1155",
     });
 };
 
-func.tags = ["FxERC1155ChildTunnel"];
+func.tags = ["FxMintableERC1155"];
 
 export default func;

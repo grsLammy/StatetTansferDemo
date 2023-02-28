@@ -1,23 +1,21 @@
-import dotenv from "dotenv";
 import { getNamedAccounts } from "hardhat";
 import { DeployFunction } from "hardhat-deploy/dist/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-dotenv.config();
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     const { deployments } = hre;
     const { deploy } = deployments;
     const { deployer } = await getNamedAccounts();
 
-    await deploy("DummyERC20RootToken", {
+    await deploy("FxERC1155", {
         from: deployer,
         args: [],
         log: true,
         skipIfAlreadyDeployed: true,
-        contract: "DummyERC20RootToken",
+        contract: "FxERC1155",
     });
 };
 
-func.tags = ["DummyERC20RootToken"];
+func.tags = ["FxERC1155"];
 
 export default func;
