@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
 import config from "../../config";
 import { getNamedAccounts } from "hardhat";
 import { DeployFunction } from "hardhat-deploy/dist/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-dotenv.config();
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments } = hre;
