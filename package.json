@@ -1,12 +1,14 @@
 {
   "name": "gelato-ui-demo",
   "version": "1.0.0",
-  "description": "simple smart contract demo for gelato ui",
+  "description": "simple demo FX PORTAL MINTABLE ERC1155",
   "scripts": {
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
+    "deploy:mumbai": "npx hardhat --network mumbai deploy",
     "deploy:goerli": "npx hardhat --network goerli deploy",
-    "deploy:mumbai": "npx hardhat --network mumbai deploy"
+    "verify:mumbai": "npx hardhat --network mumbai etherscan-verify",
+    "verify:goerli": "npx hardhat --network goerli etherscan-verify"
   },
   "author": "Gulam Rasul Shah",
   "license": "MIT",
