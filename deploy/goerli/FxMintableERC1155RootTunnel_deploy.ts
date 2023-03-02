@@ -10,7 +10,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   await deploy("FxMintableERC1155RootTunnel", {
     from: deployer,
-    args: [config.checkpointManager, config.fxRoot, config.fxMintableERC1155RootTemplate],
+    args: [config.checkpointManager, config.fxRoot, config.fxERC1155RootTemplate],
     log: true,
     skipIfAlreadyDeployed: true,
     contract: "FxMintableERC1155RootTunnel",
