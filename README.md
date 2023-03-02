@@ -1,4 +1,4 @@
-# Discord Query
+# DISCORD QUERY
 
 Message Link: https://discord.com/channels/635865020172861441/897771407310716950/1079965153052864512
 
@@ -29,3 +29,24 @@ Paste result to method receiveMessage in FxMintableERC1155RootTunnel
 
 And that's all.... but in last step i have undefined error 😦 I've been struggling with this for a week, please can anyone help?
 https://goerli.etherscan.io/tx/0x3669189d745a42e986e90fcabd610673deeb669b1097d3fc1aebcd6b43596028 
+
+
+# REPORT AND FINDINGS
+
+Analysis of Tenderly Simulated Transaction: Issues with FxMintableERC1155RootTunnel Smart Contract
+
+### Issue with FxMintableERC1155RootTunnel Initialization Function
+- The line that is reverting the transaction is FxMintableERC1155RootTunnel.sol:L156.
+- The initialize() function is called with 3 parameters, but it actually takes in 4 parameters, causing the function call to fail and the transaction to be reverted.
+- The rootTokenTemplate code shows that the missing parameter is "minter_" at FxMintableERC1155.sol:L21.
+- The initialize() function is called in FxMintableERC1155RootTunnel.sol:L156.
+- The function call fails, and the transaction is reverted.
+  
+### Issue with Generating Salt for RootToken
+- When the deployChildToken() function is called in FxMintableERC1155ChildTunnel.sol:L72, the address of childToken is generated.
+- The address of rootToken is computed using the computeCreate2Address() function in the root contract, with inputs of root salt, rootTokenTemplateCodeHash, and fxRootTunnel.
+- The function emits TokenMapped(rootToken, childToken), with rootToken and childToken addresses.
+- However, in FxMintableERC1155RootTunnel.sol:L155, the address of rootToken is different from the one emitted by the event in deployChildToken() at FxMintableERC1155ChildTunnel.sol:L72.
+- The correct rootToken address is 0x36913c4abf887b628a18a1d991a83dee40abb4a9, while the wrong address is 0x021d2e6299c0482788343b3c25a978dc9d08f882.
+- In _syncWithdraw() function at FxMintableERC1155RootTunnel.sol:L126 and _syncBatchWithdraw() function at FxMintableERC1155RootTunnel.sol:L145, the wrong argument is passed for the _deployRootToken() function at FxMintableERC1155RootTunnel.sol:L152, causing the issue.
+- The _deployRootToken() function at FxMintableERC1155RootTunnel.sol:L152 takes in childToken address and metadata, but rootToken address and metadata are passed instead.
