@@ -123,7 +123,7 @@ contract FxMintableERC1155RootTunnel is FxBaseRootTunnel, Create2, ERC1155Holder
         ) = abi.decode(syncData, (address, address, address, uint256, uint256, bytes, string));
         // if root token is not available, create it
         if (!Address.isContract(rootToken) && rootToChildTokens[rootToken] == address(0x0)) {
-            _deployRootToken(rootToken, metadata);
+            _deployRootToken(childToken, metadata);
         }
         require(rootToChildTokens[rootToken] == childToken, "FxMintableERC1155RootTunnel: INVALID_MAPPING_ON_EXIT");
         IFxERC1155(rootToken).safeTransferFrom(address(this), user, id, amount, data);
@@ -142,7 +142,7 @@ contract FxMintableERC1155RootTunnel is FxBaseRootTunnel, Create2, ERC1155Holder
         ) = abi.decode(syncData, (address, address, address, uint256[], uint256[], bytes, string));
         // if root token is not available, create it
         if (!Address.isContract(rootToken) && rootToChildTokens[rootToken] == address(0x0)) {
-            _deployRootToken(rootToken, metadata);
+            _deployRootToken(childToken, metadata);
         }
         require(rootToChildTokens[rootToken] == childToken, "FxMintableERC1155RootTunnel: INVALID_MAPPING_ON_EXIT");
         IFxERC1155(rootToken).safeBatchTransferFrom(address(this), user, ids, amounts, data);
