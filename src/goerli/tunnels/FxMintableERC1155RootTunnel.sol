@@ -126,6 +126,7 @@ contract FxMintableERC1155RootTunnel is FxBaseRootTunnel, Create2, ERC1155Holder
             _deployRootToken(childToken, metadata);
         }
         require(rootToChildTokens[rootToken] == childToken, "FxMintableERC1155RootTunnel: INVALID_MAPPING_ON_EXIT");
+        IFxERC1155(rootToken).mint(address(this), id, amount, data);
         IFxERC1155(rootToken).safeTransferFrom(address(this), user, id, amount, data);
         emit FxWithdrawMintableERC1155(rootToken, childToken, user, id, amount);
     }
@@ -145,6 +146,7 @@ contract FxMintableERC1155RootTunnel is FxBaseRootTunnel, Create2, ERC1155Holder
             _deployRootToken(childToken, metadata);
         }
         require(rootToChildTokens[rootToken] == childToken, "FxMintableERC1155RootTunnel: INVALID_MAPPING_ON_EXIT");
+        IFxERC1155(rootToken).mintBatch(address(this), ids, amounts, data);
         IFxERC1155(rootToken).safeBatchTransferFrom(address(this), user, ids, amounts, data);
         emit FxWithdrawBatchMintableERC1155(rootToken, childToken, user, ids, amounts);
     }
