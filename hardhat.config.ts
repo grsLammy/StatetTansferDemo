@@ -47,6 +47,7 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
+    //apiKey: process.env.EXPLORER_API_KEY_ETHEREUM || "",
     apiKey: process.env.EXPLORER_API_KEY_POLYGON || "",
   },
 };
