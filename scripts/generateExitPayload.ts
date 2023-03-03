@@ -30,8 +30,8 @@ async function generateExitPayload() {
       )
     ).data;
     console.log("Payload Generated: ", response.result);
-  } catch (error) {
-    console.log("Error at isCheckPointed", error);
+  } catch (error: any) {
+    console.log("Error at generateExitPayload", error.response.data);
     process.exit(1);
   }
 }
